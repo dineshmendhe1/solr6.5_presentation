@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=1024, user-scalable=no">
+
+  <title>Your deck.js Presentation</title>
+
+  <!-- Required stylesheet -->
+  <link rel="stylesheet" media="screen" href="core/deck.core.css">
+
+  <!-- Extension CSS files go here. Remove or add as needed. -->
+  <link rel="stylesheet" media="screen" href="extensions/goto/deck.goto.css">
+  <link rel="stylesheet" media="screen" href="extensions/menu/deck.menu.css">
+  <link rel="stylesheet" media="screen" href="extensions/navigation/deck.navigation.css">
+  <link rel="stylesheet" media="screen" href="extensions/status/deck.status.css">
+  <link rel="stylesheet" media="screen" href="extensions/scale/deck.scale.css">
+
+  <!-- Style theme. More available in /themes/style/ or create your own. -->
+  <link rel="stylesheet" media="screen" href="themes/style/neon.css">
+
+  <!-- Transition theme. More available in /themes/transition/ or create your own. -->
+  <link rel="stylesheet" media="screen" href="themes/transition/horizontal-slide.css">
+
+  <!-- Basic black and white print styles -->
+  <link rel="stylesheet" media="print" href="core/print.css">
+
+  <!-- Required Modernizr file -->
+  <script src="modernizr.custom.js"></script>
+</head>
+<body>
+  <div class="deck-container">
+
+    <!-- Begin slides. Just make elements with a class of slide. -->
+
+    <section class="slide">
+      <h2 ALIGN=CENTER>Solr 6.5</h2></br>
+
+      <P align=left>Download the solr {http://www.apache.org/dyn/closer.lua/lucene/solr/6.5.0} and unzip in the /apps/git location on your local machine.
+
+      <br>Go to solr installation directory and start solr by running.
+      <pre><code> bin/solr start <br/> old style from bin directory do: solr start</pre></code>from the Solr directory.
+      $ bin/solr start
+      If you are running Windows, you can start Solr by running bin\solr.cmd instead.
+      bin\solr.cmd start
+      This will start Solr in the background, listening on port 8983.</p>
+
+    </section>
+
+    <section class="slide">
+      <h2 ALIGN=CENTER>Solr Script Options</h2></br>
+      <p>Help</p>
+      <pre><code> $ bin/solr -help</pre></code>
+      <p>Start Solr in the Foreground</p>
+      <pre><code> $ bin/solr start -f</pre></code>
+      <p>Start Solr with a Different Port</p>
+      <pre><code> $ bin/solr start -p 8984</pre></code>
+      <p>Stop solr</p>
+      <pre><code> $ bin/solr stop -p 8984 <br/> $ bin/solr stop </pre></code>
+    </section>
+
+    <section class="slide">
+      <h2 ALIGN=CENTER>Check if Solr is Running</h2></br>
+      <pre><code> $ bin/solr status</pre></code>
+      <img src="images/solr-home.png"> </img>
+    </section>
+
+     <section class="slide">
+      <h2 ALIGN=CENTER>Create a Core</h2></br>
+      <pre><code> $ bin/solr create -c {name}</pre></code>
+      <pre><code> $ bin/solr create -help</pre></code>
+      <h2 ALIGN=CENTER>Setting Java System Properties</h2></br>
+      <pre><code> $ bin/solr start -Dsolr.autoSoftCommit.maxTime=3000</pre></code>
+    </section>
+
+    <section class="slide">
+      <h2 ALIGN=CENTER>SolrCloud Mode</h2></br>
+      <pre><code> $ bin/solr start -c <br/> $ bin/solr start -cloud</pre></code>
+    </section>
+
+    <section class="slide">
+      <h2 ALIGN=CENTER>Solr Core and Autocomplete</h2></br>
+      <pre><code> $ bin/solr create -c autocomplete -d basic_configs</pre></code>
+      <pre><code>Creating new core 'autocomplete' using command:
+    http://localhost:8983/solr/admin/cores?action=CREATE&name=autocomplte&instanceDir=autocomplete
+
+    {
+     "responseHeader":{
+     "status":0,
+     "QTime":663},
+     "core":"jcg"}
+    </pre></code>
+    </section>
+
+    <section class="slide">
+      <h2 ALIGN=CENTER> Indexing the Data</h2></br>
+       <pre><code>java -Dtype=text/csv -Durl=http://localhost:8983/solr/autocomplete/update -jar post.jar  books.csv </pre></code>
+
+      <pre><code> 
+        SimplePostTool version 5.0.0
+        Posting files to [base] url 
+        http://localhost:8983/solr/autocomplete/update
+        using content-type text/csv...
+        POSTing file books.csv to [base]
+        1 files indexed.
+        COMMITting Solr index changes to 
+        http://localhost:8983/solr/autocomplete/update...
+        Time spent: 0:00:00.647
+      <pre><code> 
+    </section>
+
+    <section class="slide">
+      <h2 ALIGN=CENTER> Modifying Managed Schema File</h2></br>
+       <img src="images/managed-schema.png" width=1000px height=700px> </img>
+    </section>
+
+    <section class="slide">
+      <h2 ALIGN=CENTER> Modifying Managed Schema File</h2></br>
+      <pre><code>It is not recommended to modify managed-schema file manually. Use the Schema-UI to add the fields.</pre></code>
+      <img src="images/do-not-edit.png" width=1000px height=700px> </img>
+    </section>
+    <section class="slide">
+      <h2 align=center>Autocomplete</h2>
+       <pre><code>JSONP: is a method commonly used to bypass the cross-domain policies in web browsers (you are not allowed to make AJAX requests to a webpage perceived to be on a different server by the browser).</pre></code>
+      <pre><code>  
+              <xmp>
+              <title>Solr auto complete</title>
+              <link
+                href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css"
+                rel="stylesheet"></link>
+                
+              <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+              <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+              <script>
+                $(function() {
+                  var URL_PREFIX = "http://localhost:8983/solr/autocomplete/select?q=name:";
+                  var URL_SUFFIX = "&wt=json";
+                  $("#searchBox").autocomplete({
+                    source : function(request, response) {
+                      var URL = URL_PREFIX + $("#searchBox").val() + URL_SUFFIX;
+                      $.ajax({
+                        url : URL,
+                        success : function(data) {
+                          var docs = JSON.stringify(data.response.docs);
+                          var jsonData = JSON.parse(docs);
+                          response($.map(jsonData, function(value, key) {
+                            return {
+                              label : value.name
+                            }
+                          }));
+                        },
+                        dataType : 'jsonp',
+                        jsonp : 'json.wrf'
+                      });
+                    },
+                    minLength : 1
+                  })
+                });
+              </script>
+              </head>
+              <body>
+                <div>
+                  <center><p>Type the search keyword</p></center>
+                  <center><label for="searchBox">Institution Name: 
+                  </label> <input id="searchBox"></input></center>
+                </div>
+              </xmp>
+    </pre></code> 
+
+    </section>
+
+     <section class="slide">
+      <h2 ALIGN=CENTER> Thank you</h2></br>
+      <img src="images/umd.png" > </img>
+    </section>
+
+    <!-- End slides. -->
+
+    <!-- Begin extension snippets. Add or remove as needed. -->
+
+    <!-- deck.navigation snippet -->
+    <div aria-role="navigation">
+      <a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
+      <a href="#" class="deck-next-link" title="Next">&#8594;</a>
+    </div>
+
+    <!-- deck.status snippet -->
+    <p class="deck-status" aria-role="status">
+      <span class="deck-status-current"></span>
+      /
+      <span class="deck-status-total"></span>
+    </p>
+
+    <!-- deck.goto snippet -->
+    <form action="." method="get" class="goto-form">
+      <label for="goto-slide">Go to slide:</label>
+      <input type="text" name="slidenum" id="goto-slide" list="goto-datalist">
+      <datalist id="goto-datalist"></datalist>
+      <input type="submit" value="Go">
+    </form>
+
+    <!-- End extension snippets. -->
+  </div>
+
+<!-- Required JS files. -->
+<script src="jquery.min.js"></script>
+<script src="core/deck.core.js"></script>
+
+<!-- Extension JS files. Add or remove as needed. -->
+<script src="extensions/menu/deck.menu.js"></script>
+<script src="extensions/goto/deck.goto.js"></script>
+<script src="extensions/status/deck.status.js"></script>
+<script src="extensions/navigation/deck.navigation.js"></script>
+<script src="extensions/scale/deck.scale.js"></script>
+
+<!-- Initialize the deck. You can put this in an external file if desired. -->
+<script>
+  $(function() {
+    $.deck('.slide');
+  });
+</script>
+</body>
+</html>
